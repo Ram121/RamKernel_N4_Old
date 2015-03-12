@@ -60,7 +60,7 @@ obj-y += samsung/
 endif
 
 obj-$(CONFIG_FB_MSM_MDSS_KCAL_CTRL) += mdss_mdp_kcal_ctrl.o
-
+obj-$(CONFIG_FB_MSM_MDSS) += lcd_notify.o
 ifeq ($(CONFIG_FB_MSM_MDSS_MDP3),y)
 obj-$(CONFIG_FB_MSM_MDSS_DSI_CTRL_STATUS) += dsi_status_v2.o
 else
