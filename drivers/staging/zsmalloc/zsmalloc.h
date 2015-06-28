@@ -19,7 +19,11 @@
  * zsmalloc mapping modes
  *
  * NOTE: These only make a difference when a mapped object spans pages
+<<<<<<< HEAD
  */
+=======
+*/
+>>>>>>> 7ce7fb3... Linux 3.10.61>>>3.10.71
 enum zs_mapmode {
 	ZS_MM_RW, /* normal read-write mapping */
 	ZS_MM_RO, /* read-only (no copy-out at unmap time) */
