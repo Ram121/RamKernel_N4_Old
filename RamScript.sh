@@ -45,7 +45,7 @@ rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
 rm $(pwd)arch/arm/boot/zImage
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1$2_V4_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1$2_V5_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
 
 rm $(pwd)/bootimg/zips/template/boot.img
 
