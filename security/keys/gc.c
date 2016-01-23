@@ -189,8 +189,13 @@ static noinline void key_gc_unused_keys(struct list_head *keys)
 
 		/* Throw away the key data if the key is instantiated */
 		if (test_bit(KEY_FLAG_INSTANTIATED, &key->flags) &&
+<<<<<<< HEAD
 				!test_bit(KEY_FLAG_NEGATIVE, &key->flags) &&
 				key->type->destroy)
+=======
+		    !test_bit(KEY_FLAG_NEGATIVE, &key->flags) &&
+		    key->type->destroy)
+>>>>>>> d43a711... Linux 3.10.95 credits @UpInTheAir
 			key->type->destroy(key);
 
 		security_key_free(key);
