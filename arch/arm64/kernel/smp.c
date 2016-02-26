@@ -147,6 +147,21 @@ asmlinkage void __cpuinit secondary_start_kernel(void)
 		cpu_ops[cpu]->cpu_postboot();
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Enable GIC and timers.
+	 */
+	notify_cpu_starting(cpu);
+
+	smp_store_cpu_info(cpu);
+
+	/*
+	 * Log the CPU info before it is marked online and might get read.
+	 */
+	cpuinfo_store_cpu();
+
+	/*
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 	 * OK, now it's safe to let the boot CPU continue.  Wait for
 	 * the CPU migration code to notice that the CPU is online
 	 * before we continue.
