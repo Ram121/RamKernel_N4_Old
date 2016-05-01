@@ -1,17 +1,24 @@
 /*
- *  drivers/cpufreq/cpufreq_conservativex.c
+ * drivers/cpufreq/cpufreq_wave.c
  *
- *  Copyright (C)  2001 Russell King
- *            (C)  2003 Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>.
+ * Based on the Conservative governor by:
+ *
+ *    Copyright (C)  2001 Russell King
+ *				(C)  2003 Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>.
  *                      Jun Nakajima <jun.nakajima@intel.com>
- *            (C)  2009 Alexander Clouter <alex@digriz.org.uk>
- *            (C)  2013 Florent Guichard <http://broodplank.net> 
+ *            	(C)  2013 The Linux Foundation. All rights reserved.
+ *              (C)  2015 zparallax <zparallax1@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
 
+#include <asm/cputime.h>
+#include <linux/kthread.h>
+#include <linux/time.h>
+#include <linux/timer.h>
+#include <linux/cpumask.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
@@ -24,19 +31,19 @@
 #include <linux/tick.h>
 #include <linux/ktime.h>
 #include <linux/sched.h>
-
+#include <linux/input.h>
+#include <linux/workqueue.h>
+#include <linux/slab.h>
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
 /*
  * dbs is used in this file as a shortform for demandbased switching
  * It helps to keep variable names smaller, simpler
  */
 
-<<<<<<< HEAD
-#define DEF_FREQUENCY_UP_THRESHOLD		(85)
-#define DEF_FREQUENCY_DOWN_THRESHOLD		(50)
-=======
-#define DEF_FREQUENCY_UP_THRESHOLD		(70)
+#define DEF_FREQUENCY_UP_THRESHOLD		(80)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
->>>>>>> 9cbee03... Drivers: CPU Governors
 
 /*
  * The polling frequency of this governor depends on the capability of
@@ -48,23 +55,15 @@
  * this governor will not work.
  * All times here are in uS.
  */
-<<<<<<< HEAD
-#define MIN_SAMPLING_RATE_RATIO			(4)
-=======
-#define MIN_SAMPLING_RATE_RATIO			(2)
->>>>>>> 9cbee03... Drivers: CPU Governors
+#define DEF_MIN_SAMPLING_RATE_RATIO			(2)
 
 static unsigned int min_sampling_rate;
 
-#define LATENCY_MULTIPLIER			(1000)
-#define MIN_LATENCY_MULTIPLIER			(100)
-#define DEF_SAMPLING_DOWN_FACTOR		(1)
-<<<<<<< HEAD
-#define MAX_SAMPLING_DOWN_FACTOR		(5)
-=======
-#define MAX_SAMPLING_DOWN_FACTOR		(10)
->>>>>>> 9cbee03... Drivers: CPU Governors
-#define TRANSITION_LATENCY_LIMIT		(10 * 1000 * 1000)
+#define DEF_LATENCY_MULTIPLIER				(1000)
+#define DEF_MIN_LATENCY_MULTIPLIER			(100)
+#define DEF_SAMPLING_DOWN_FACTOR			(1)
+#define DEF_MAX_SAMPLING_DOWN_FACTOR		(10)
+#define DEF_TRANSITION_LATENCY_LIMIT		(10 * 1000 * 1000)
 
 static void do_dbs_timer(struct work_struct *work);
 
@@ -108,38 +107,11 @@ static struct dbs_tuners {
 	.down_threshold = DEF_FREQUENCY_DOWN_THRESHOLD,
 	.sampling_down_factor = DEF_SAMPLING_DOWN_FACTOR,
 	.ignore_nice = 0,
-<<<<<<< HEAD
-	.freq_step = 10,
-=======
 	.freq_step = 5,
->>>>>>> 9cbee03... Drivers: CPU Governors
 };
 
-static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
-{
-	u64 idle_time;
-	u64 cur_wall_time;
-	u64 busy_time;
-
-	cur_wall_time = jiffies64_to_cputime64(get_jiffies_64());
-
-	busy_time  = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
-
-	idle_time = cur_wall_time - busy_time;
-	if (wall)
-		*wall = jiffies_to_usecs(cur_wall_time);
-
-	return jiffies_to_usecs(idle_time);
-}
-
 /* keep track of frequency transitions */
-static int
-dbs_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+static int dbs_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
 		     void *data)
 {
 	struct cpufreq_freqs *freq = data;
@@ -200,12 +172,58 @@ static ssize_t store_sampling_down_factor(struct kobject *a,
 	int ret;
 	ret = sscanf(buf, "%u", &input);
 
-	if (ret != 1 || input > MAX_SAMPLING_DOWN_FACTOR || input < 1)
+	if (ret != 1 || input > DEF_MAX_SAMPLING_DOWN_FACTOR || input < 1)
 		return -EINVAL;
 
 	dbs_tuners_ins.sampling_down_factor = input;
 	return count;
 }
+
+
+static void update_sampling_rate(unsigned int new_rate)
+{
+	int cpu;
+
+	dbs_tuners_ins.sampling_rate = new_rate
+				     = max(new_rate, min_sampling_rate);
+
+	get_online_cpus();
+	for_each_online_cpu(cpu) {
+		struct cpufreq_policy *policy;
+		struct cpu_dbs_info_s *dbs_info;
+		unsigned long next_sampling, appointed_at;
+
+		policy = cpufreq_cpu_get(cpu);
+		if (!policy)
+			continue;
+		dbs_info = &per_cpu(cs_cpu_dbs_info, policy->cpu);
+		cpufreq_cpu_put(policy);
+
+		mutex_lock(&dbs_info->timer_mutex);
+
+		if (!delayed_work_pending(&dbs_info->work)) {
+			mutex_unlock(&dbs_info->timer_mutex);
+			continue;
+		}
+
+		next_sampling  = jiffies + usecs_to_jiffies(new_rate);
+		appointed_at = dbs_info->work.timer.expires;
+
+		if (time_before(next_sampling, appointed_at)) {
+
+			mutex_unlock(&dbs_info->timer_mutex);
+			cancel_delayed_work_sync(&dbs_info->work);
+			mutex_lock(&dbs_info->timer_mutex);
+
+			queue_delayed_work_on(dbs_info->cpu, dbs_wq,
+				&dbs_info->work, usecs_to_jiffies(new_rate));
+
+		}
+		mutex_unlock(&dbs_info->timer_mutex);
+	}
+	put_online_cpus();
+}
+
 
 static ssize_t store_sampling_rate(struct kobject *a, struct attribute *b,
 				   const char *buf, size_t count)
@@ -217,7 +235,8 @@ static ssize_t store_sampling_rate(struct kobject *a, struct attribute *b,
 	if (ret != 1)
 		return -EINVAL;
 
-	dbs_tuners_ins.sampling_rate = max(input, min_sampling_rate);
+	//dbs_tuners_ins.sampling_rate = max(input, min_sampling_rate);
+	update_sampling_rate(input);
 	return count;
 }
 
@@ -276,13 +295,8 @@ static ssize_t store_ignore_nice_load(struct kobject *a, struct attribute *b,
 	for_each_online_cpu(j) {
 		struct cpu_dbs_info_s *dbs_info;
 		dbs_info = &per_cpu(cs_cpu_dbs_info, j);
-<<<<<<< HEAD
 		dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
 						&dbs_info->prev_cpu_wall, 0);
-=======
-		//dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
-						//&dbs_info->prev_cpu_wall, 0);
->>>>>>> 9cbee03... Drivers: CPU Governors
 		if (dbs_tuners_ins.ignore_nice)
 			dbs_info->prev_cpu_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
 	}
@@ -328,7 +342,7 @@ static struct attribute *dbs_attributes[] = {
 
 static struct attribute_group dbs_attr_group = {
 	.attrs = dbs_attributes,
-	.name = "conservativex",
+	.name = "wave",
 };
 
 /************************** sysfs end ************************/
@@ -363,11 +377,7 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 
 		j_dbs_info = &per_cpu(cs_cpu_dbs_info, j);
 
-<<<<<<< HEAD
 		cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, 0);
-=======
-		//cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, 0);
->>>>>>> 9cbee03... Drivers: CPU Governors
 
 		wall_time = (unsigned int)
 			(cur_wall_time - j_dbs_info->prev_cpu_wall);
@@ -378,7 +388,7 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 		j_dbs_info->prev_cpu_idle = cur_idle_time;
 
 		if (dbs_tuners_ins.ignore_nice) {
-			u64 cur_nice;
+			cputime64_t cur_nice;
 			unsigned long cur_nice_jiffies;
 
 			cur_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE] -
@@ -420,7 +430,7 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 
 		freq_target = (dbs_tuners_ins.freq_step * policy->max) / 100;
 
-		/* max freq cannot be less than 100. But who knows.... */
+		/* max freq cannot be less than 100 */
 		if (unlikely(freq_target == 0))
 			freq_target = 5;
 
@@ -466,13 +476,13 @@ static void do_dbs_timer(struct work_struct *work)
 	/* We want all CPUs to do sampling nearly on same jiffy */
 	int delay = usecs_to_jiffies(dbs_tuners_ins.sampling_rate);
 
-	delay -= jiffies % delay;
+	// delay -= jiffies % delay;
 
 	mutex_lock(&dbs_info->timer_mutex);
 
 	dbs_check_cpu(dbs_info);
 
-	queue_delayed_work_on(cpu, dbs_wq, &dbs_info->work, delay);
+	schedule_delayed_work_on(cpu, &dbs_info->work, delay);
 	mutex_unlock(&dbs_info->timer_mutex);
 }
 
@@ -480,11 +490,12 @@ static inline void dbs_timer_init(struct cpu_dbs_info_s *dbs_info)
 {
 	/* We want all CPUs to do sampling nearly on same jiffy */
 	int delay = usecs_to_jiffies(dbs_tuners_ins.sampling_rate);
-	delay -= jiffies % delay;
+
+	// delay -= jiffies % delay;
 
 	dbs_info->enable = 1;
 	INIT_DEFERRABLE_WORK(&dbs_info->work, do_dbs_timer);
-	queue_delayed_work_on(dbs_info->cpu, dbs_wq, &dbs_info->work, delay);
+	schedule_delayed_work_on(dbs_info->cpu, &dbs_info->work, delay);
 }
 
 static inline void dbs_timer_exit(struct cpu_dbs_info_s *dbs_info)
@@ -515,16 +526,12 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			j_dbs_info = &per_cpu(cs_cpu_dbs_info, j);
 			j_dbs_info->cur_policy = policy;
 
-<<<<<<< HEAD
 			j_dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
 						&j_dbs_info->prev_cpu_wall, 0);
-=======
-			//j_dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
-						//&j_dbs_info->prev_cpu_wall, 0);
->>>>>>> 9cbee03... Drivers: CPU Governors
-			if (dbs_tuners_ins.ignore_nice)
+			if (dbs_tuners_ins.ignore_nice) {
 				j_dbs_info->prev_cpu_nice =
 						kcpustat_cpu(j).cpustat[CPUTIME_NICE];
+			}
 		}
 		this_dbs_info->down_skip = 0;
 		this_dbs_info->requested_freq = policy->cur;
@@ -549,18 +556,8 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 				return rc;
 			}
 
-			/*
-			 * conservativex does not implement micro like ondemand
-			 * governor, thus we are bound to jiffes/HZ
-			 */
-			min_sampling_rate =
-				MIN_SAMPLING_RATE_RATIO * jiffies_to_usecs(10);
-			/* Bring kernel and HW constraints together */
-			min_sampling_rate = max(min_sampling_rate,
-					MIN_LATENCY_MULTIPLIER * latency);
-			dbs_tuners_ins.sampling_rate =
-				max(min_sampling_rate,
-				    latency * LATENCY_MULTIPLIER);
+			min_sampling_rate = 10000;
+			dbs_tuners_ins.sampling_rate = 10000;
 
 			cpufreq_register_notifier(
 					&dbs_cpufreq_notifier_block,
@@ -612,45 +609,38 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 	return 0;
 }
 
-#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX
+#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_WAVE
 static
 #endif
-struct cpufreq_governor cpufreq_gov_conservativex = {
-	.name			= "conservativex",
+struct cpufreq_governor cpufreq_gov_wave = {
+	.name			= "wave",
 	.governor		= cpufreq_governor_dbs,
-	.max_transition_latency	= TRANSITION_LATENCY_LIMIT,
+	.max_transition_latency	= DEF_TRANSITION_LATENCY_LIMIT,
 	.owner			= THIS_MODULE,
 };
 
 static int __init cpufreq_gov_dbs_init(void)
 {
-	dbs_wq = alloc_workqueue("conservativex_dbs_wq", WQ_HIGHPRI, 0);
+	dbs_wq = alloc_workqueue("wave_dbs_wq", WQ_HIGHPRI, 0);
 	if (!dbs_wq) {
-		printk(KERN_ERR "Failed to create conservativex_dbs_wq workqueue\n");
+	  printk(KERN_ERR "Failed to create wave_dbs_wq workqueue\n");
 		return -EFAULT;
 	}
-
-	return cpufreq_register_governor(&cpufreq_gov_conservativex);
+	
+	return cpufreq_register_governor(&cpufreq_gov_wave);
 }
 
 static void __exit cpufreq_gov_dbs_exit(void)
 {
-	cpufreq_unregister_governor(&cpufreq_gov_conservativex);
 	destroy_workqueue(dbs_wq);
+	
+	cpufreq_unregister_governor(&cpufreq_gov_wave);
 }
 
-
-MODULE_AUTHOR("Alexander Clouter <alex@digriz.org.uk>; Florent Guichard <info@broodplank.net>");
-MODULE_DESCRIPTION("'cpufreq_conservativex' - A less aggressive version of "
-		" the conservativex governor (higher performance) ");
+MODULE_AUTHOR("Apolo Lopez");
+MODULE_AUTHOR("zparallax <zparallax1@gmail.com>");
+MODULE_DESCRIPTION("'cpufreq_wave' - A conservative-based governor.");
 MODULE_LICENSE("GPL");
 
-#ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX
 fs_initcall(cpufreq_gov_dbs_init);
-#else
-module_init(cpufreq_gov_dbs_init);
-#endif
 module_exit(cpufreq_gov_dbs_exit);
-
-
-
