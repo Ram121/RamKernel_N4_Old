@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mv Makefile_N910P Makefile
 export ARCH=arm
 export CROSS_COMPILE=/opt/toolchains/UBERTC-arm-eabi-4.8/bin/arm-eabi-
 mkdir output
