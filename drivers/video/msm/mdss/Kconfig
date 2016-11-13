@@ -132,11 +132,8 @@ config FB_MSM_MDSS_KCAL_CTRL
 	depends on FB_MSM_MDSS
 	bool "MDSS color control"
 	---help---
-<<<<<<< HEAD
 	  Enable sysfs for post-processing control of mdss-mdp5 display
 	  controllers in MDSS.
->>>>>>> 05fe6eb... msm: mdss: Add KCAL support for post processing control [v2]
-
 
 source "drivers/video/msm/mdss/samsung/Kconfig"
 
