@@ -17,14 +17,13 @@ set_perm_recursive(1000, 1000, 0775, 0644, "/system/app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/priv-app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/framework");
 
-ui_print("Extracting boot image...");
+ui_print("Working...");
 ui_print(" ");
-package_extract_file("boot_N7_port.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
+package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
 
-package_extract_dir("root", "/tmp/root");
-run_program("/sbin/busybox", "unzip", "/tmp/root/SuperSU-v2.78-SR1.zip", "META-INF/com/google/android/*", "-d", "/tmp/root");
-run_program("/sbin/busybox", "sh", "/tmp/root/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/root/SuperSU-v2.78-SR1.zip");
-ui_print(" ");
+package_extract_dir("ram", "/tmp/ram");
+run_program("/sbin/busybox", "unzip", "/tmp/ram/SuperSU-v2.78-SR3.zip", "META-INF/com/google/android/*", "-d", "/tmp/ram");
+run_program("/sbin/busybox", "sh", "/tmp/ram/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/ram/SuperSU-v2.78-SR3.zip");
 
 run_program("/sbin/busybox", "umount", "/system"); 
 show_progress(1, 1);

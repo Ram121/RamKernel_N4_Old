@@ -2,7 +2,7 @@
 
 mv Makefile_N910G Makefile
 export ARCH=arm
-export CROSS_COMPILE=/opt/toolchains/UBERTC-arm-eabi-4.8/bin/arm-eabi-
+export CROSS_COMPILE=/opt/toolchains/Linaro-4.8-arm-eabi/bin/arm-eabi-
 mkdir output
 
 make -C $(pwd) O=output VARIANT_DEFCONFIG=apq8084_sec_trlte_eur_defconfig apq8084_sec_defconfig SELINUX_DEFCONFIG=selinux_defconfig
@@ -56,6 +56,6 @@ wait
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910G_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/root $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img $(pwd)/bootimg/zips/template/data
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910G_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/root $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img
 
 rm $(pwd)/bootimg/zips/template/boot.img
