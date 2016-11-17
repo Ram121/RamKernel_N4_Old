@@ -20,7 +20,7 @@ rm $(pwd)/bootimg/AIK-Linux-2.4/split_img/boot.img-zImage
 
 cp $(pwd)/output/arch/arm/boot/zImage $(pwd)/bootimg/AIK-Linux-2.4/split_img/boot.img-zImage
 
-rm -r $(pwd)/output
+#rm -r $(pwd)/output
 
 patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/default.prop $(pwd)/bootimg/patches/default.prop.patch
 
@@ -44,6 +44,6 @@ wait
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910G_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/root $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910G_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/ram $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img
 
 rm $(pwd)/bootimg/zips/template/boot.img
