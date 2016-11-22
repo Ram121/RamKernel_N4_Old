@@ -1,0 +1,18 @@
+--- init.rc	2016-11-22 19:17:10.344717800 +0530
++++ modified.init.rc	2016-11-22 19:13:57.668879000 +0530
+@@ -336,7 +336,6 @@
+ 
+ on post-fs-data
+     # Reload SE Android Policy
+-    setprop selinux.reload_policy 1
+ 
+     # We chown/chmod /data again so because mount is run as root + defaults
+     chown system system /data
+@@ -1389,7 +1388,6 @@
+ 
+ # Reload SE Android Policy for MDM
+ on property:persist.security.mdm.policy=1
+-    setprop selinux.reload_policy 1
+ 
+ ## Daemon processes to be run by init.
+ ##

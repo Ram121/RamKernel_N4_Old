@@ -1,6 +1,6 @@
---- default.prop	2016-11-13 14:04:33.477334500 +0530
-+++ edited.default.prop	2016-10-11 11:37:47.684004000 +0530
-@@ -8,11 +8,11 @@
+--- default.prop	2016-11-22 19:17:09.999610800 +0530
++++ edited.default.prop	2016-11-22 19:20:11.491387600 +0530
+@@ -8,8 +8,8 @@
  persist.radio.apm_sim_not_pwdn=1
  persist.radio.add_power_save=1
  persist.data.netmgrd.qos.enable=false
@@ -9,14 +9,9 @@
 +persist.security.ams.enforcing=0
 +ro.secure=0
  ro.allow.mock.location=0
--ro.debuggable=0
--ro.adb.secure=1
-+ro.debuggable=1
-+ro.adb.secure=0
- ro.zygote=zygote32
- dalvik.vm.image-dex2oat-Xms=64m
- dalvik.vm.image-dex2oat-Xmx=64m
-@@ -20,10 +20,24 @@
+ ro.debuggable=0
+ ro.adb.secure=1
+@@ -20,7 +20,21 @@
  dalvik.vm.dex2oat-Xmx=512m
  ro.dalvik.vm.native.bridge=0
  debug.atrace.tags.enableflags=0
@@ -39,9 +34,3 @@
  #
  # BOOTIMAGE_BUILD_PROPERTIES
  #
--ro.bootimage.build.date=Tue Oct 4 16:13:24 KST 2016
--ro.bootimage.build.date.utc=1475565205
--ro.bootimage.build.fingerprint=samsung/trltedt/trlte:6.0.1/MMB29M/N910GDTS1DPJ2:user/test-keys
-+ro.bootimage.build.date=Tue Sep 6 16:36:12 KST 2016
-+ro.bootimage.build.date.utc=1473147372
-+ro.bootimage.build.fingerprint=samsung/trltedt/trlte:6.0.1/MMB29M/N910GDTS1DPI1:user/test-keys
