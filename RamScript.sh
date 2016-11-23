@@ -52,7 +52,9 @@ wait
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910$1_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/ram $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910$1_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img
+
+#removed $(pwd)/bootimg/zips/template/ram
 
 rm $(pwd)/bootimg/zips/template/boot.img
 
