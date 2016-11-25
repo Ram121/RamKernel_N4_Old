@@ -35,15 +35,6 @@ wait
 
 cp $(pwd)/bootimg/AIK-Linux-2.4/image-new.img $(pwd)/bootimg/zips/template/boot.img
 
-file="$(pwd)/bootimg/zips/template/boot.img"
-if [ -f "$file" ]
-then
-	echo "$file found removing output directory"
-	rm -r $(pwd)/output 
-else
-	echo "$file not found"
-fi
-
 for i in $(pwd)/bootimg/AIK-Linux-2.4/cleanup.sh
 do
 "$i" &
@@ -52,9 +43,9 @@ wait
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910$1_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N910$1_Linaro6.1_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
 
-#removed $(pwd)/bootimg/zips/template/ram
+#Removing of output folder moved to main build_kernel.sh script at the start
 
 rm $(pwd)/bootimg/zips/template/boot.img
 
