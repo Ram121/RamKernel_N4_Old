@@ -377,14 +377,8 @@ int dwc3_send_gadget_generic_command(struct dwc3 *dwc, int cmd, u32 param)
 		if (!(reg & DWC3_DGCMD_CMDACT)) {
 			dev_vdbg(dwc->dev, "Command Complete --> %d\n",
 					DWC3_DGCMD_STATUS(reg));
-<<<<<<< HEAD
 			ret = 0;
 			break;
-=======
-			if (DWC3_DGCMD_STATUS(reg))
-				return -EINVAL;
-			return 0;
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 		}
 
 		/*
@@ -425,7 +419,6 @@ int dwc3_send_gadget_ep_cmd(struct dwc3 *dwc, unsigned ep,
 		if (!(reg & DWC3_DEPCMD_CMDACT)) {
 			dev_vdbg(dwc->dev, "Command Complete --> %d\n",
 					DWC3_DEPCMD_STATUS(reg));
-<<<<<<< HEAD
 			/* SW issues START TRANSFER command to isochronous ep
 			 * with future frame interval. If future interval time
 			 * has already passed when core recieves command, core
@@ -437,11 +430,6 @@ int dwc3_send_gadget_ep_cmd(struct dwc3 *dwc, unsigned ep,
 			else
 				ret = 0;
 			break;
-=======
-			if (DWC3_DEPCMD_STATUS(reg))
-				return -EINVAL;
-			return 0;
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 		}
 
 		/*
@@ -1041,17 +1029,12 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep, bool starting)
 
 				if (i == (request->num_mapped_sgs - 1) ||
 						sg_is_last(s)) {
-<<<<<<< HEAD
 					unsigned temp = 0;
 					unsigned len;
 					struct dwc3_request *nreq = n;
 					struct usb_request *ureq;
 					bool mpkt = false;
 
-=======
-					if (list_empty(&dep->request_list))
-						last_one = true;
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 					chain = false;
 					if (last_req) {
 						last_one = true;
@@ -1098,11 +1081,7 @@ start_trb_queuing:
 				if (last_one)
 					break;
 			}
-<<<<<<< HEAD
 			dbg_queue(dep->number, &req->request, trbs_left);
-=======
-
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 			if (last_one)
 				break;
 		} else {

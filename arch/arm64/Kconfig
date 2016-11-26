@@ -60,16 +60,6 @@ config NO_IOPORT
 config STACKTRACE_SUPPORT
 	def_bool y
 
-<<<<<<< HEAD
-=======
-config HAVE_LATENCYTOP_SUPPORT
-	def_bool y
-
-config ILLEGAL_POINTER_VALUE
-	hex
-	default 0xdead000000000000
-
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 config LOCKDEP_SUPPORT
 	def_bool y
 

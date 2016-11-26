@@ -1108,14 +1108,6 @@ static int irda_create(struct net *net, struct socket *sock, int protocol,
 	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	IRDA_DEBUG(2, "%s()\n", __func__);
-
-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
-		return -EINVAL;
-
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 	if (net != &init_net)
 		return -EAFNOSUPPORT;
 
