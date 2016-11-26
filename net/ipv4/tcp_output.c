@@ -1901,17 +1901,18 @@ static bool tcp_write_xmit(struct sock *sk, unsigned int mss_now, int nonagle,
 		}
 
 		limit = mss_now;
-/*		if (tso_segs > 1 && !tcp_urg_mode(tp)) */
-
+<<<<<<< HEAD
+		if (tso_segs > 1 && !tcp_urg_mode(tp))
+=======
 		if (tso_segs > 1 && sk->sk_gso_max_segs && !tcp_urg_mode(tp))
-/*#ifdef CONFIG_MPTCP
- *			limit = tcp_mss_split_point(sk, skb, mss_now,
- *						    min_t(unsigned int,
- *							  cwnd_quota,
- *							  sk->sk_gso_max_segs),
- *							  nonagle);
- *#else
- */
+#ifdef CONFIG_MPTCP
+			limit = tcp_mss_split_point(sk, skb, mss_now,
+						    min_t(unsigned int,
+							  cwnd_quota,
+							  sk->sk_gso_max_segs),
+							  nonagle);
+#else
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 			limit = tcp_mss_split_point(sk, skb, mss_now,
 						    min_t(unsigned int,
 							  cwnd_quota,

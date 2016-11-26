@@ -1313,9 +1313,12 @@ static int do_setlink(const struct sk_buff *skb,
 			err = PTR_ERR(net);
 			goto errout;
 		}
-/*		if (!netlink_net_capable(skb, CAP_NET_ADMIN)) { */
+<<<<<<< HEAD
+		if (!netlink_net_capable(skb, CAP_NET_ADMIN)) {
+=======
 		if (!netlink_ns_capable(skb, net->user_ns, CAP_NET_ADMIN)) {
 			put_net(net);
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 			err = -EPERM;
 			goto errout;
 		}

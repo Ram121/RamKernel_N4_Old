@@ -1730,13 +1730,13 @@ static void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 
 	host->mrq = mrq;
 
+<<<<<<< HEAD
 	if (mrq->data && (mmc->index == 0)) {
 		sg_ptr0 = (u8 *)mrq->data->sg;
 	}
 	if (mrq->data && (mmc->index == 1)) {
 		sg_ptr1 = (u8 *)mrq->data->sg;
-	}
-
+=======
 	/*
 	 * Firstly check card presence from cd-gpio.  The return could
 	 * be one of the following possibilities:
@@ -1751,6 +1751,7 @@ static void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 		else
 			present = sdhci_readl(host, SDHCI_PRESENT_STATE) &
 					SDHCI_CARD_PRESENT;
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 	}
 
 	if (!present || host->flags & SDHCI_DEVICE_DEAD) {

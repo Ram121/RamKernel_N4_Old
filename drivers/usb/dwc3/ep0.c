@@ -765,10 +765,13 @@ static int dwc3_ep0_std_request(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
 		break;
 	case USB_REQ_SET_INTERFACE:
 		dev_vdbg(dwc->dev, "USB_REQ_SET_INTERFACE\n");
+<<<<<<< HEAD
 		ret = dwc3_ep0_set_interface(dwc, ctrl);
 		break;
+=======
 		dwc->start_config_issued = false;
 		/* Fall through */
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 	default:
 		dev_vdbg(dwc->dev, "Forwarding to gadget driver\n");
 		ret = dwc3_ep0_delegate_req(dwc, ctrl);

@@ -1801,7 +1801,11 @@ static long __snd_timer_user_ioctl(struct file *file, unsigned int cmd,
 	{
 		int xarg;
 
-		if (tu->timeri) /* too late */
+<<<<<<< HEAD
+		if (tu->timeri)
+=======
+		if (tu->timeri)	/* too late */
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 			return -EBUSY;
 		if (get_user(xarg, p))
 			return -EFAULT;

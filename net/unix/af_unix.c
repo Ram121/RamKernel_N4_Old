@@ -1532,7 +1532,11 @@ static int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
 		return -ENOMEM;
 
 	for (i = scm->fp->count - 1; i >= 0; i--)
+<<<<<<< HEAD
 		unix_inflight(scm->fp->user, scm->fp->fp[i]);
+=======
+		unix_inflight(scm->fp->fp[i]);
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 	return max_level;
 }
 

@@ -1262,11 +1262,14 @@ struct xhci_td {
 	struct xhci_segment	*start_seg;
 	union xhci_trb		*first_trb;
 	union xhci_trb		*last_trb;
+<<<<<<< HEAD
 
 	/* ZLP received in data stage of a control transfer */
 	bool			zlp_data;
+=======
 	/* actual_length of the URB has already been set */
 	bool			urb_length_set;
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 };
 
 /* xHCI command default timeout value */
