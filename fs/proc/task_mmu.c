@@ -1186,6 +1186,8 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
 static int pagemap_open(struct inode *inode, struct file *file)
 {
 
@@ -1197,6 +1199,8 @@ static int pagemap_open(struct inode *inode, struct file *file)
 		return -EPERM;
 	return 0;
 }
+
+>>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 const struct file_operations proc_pagemap_operations = {
 	.llseek		= mem_lseek, /* borrow this */
 	.read		= pagemap_read,
