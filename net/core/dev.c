@@ -6022,13 +6022,8 @@ static int dev_cpu_callback(struct notifier_block *nfb,
 	 */
 	while (!list_empty(&oldsd->poll_list)) {
 		struct napi_struct *napi = list_first_entry(&oldsd->poll_list,
-<<<<<<< HEAD
 							struct napi_struct,
 							poll_list);
-=======
-							    struct napi_struct,
-							    poll_list);
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
 
 		list_del_init(&napi->poll_list);
 		if (napi->poll == process_backlog)

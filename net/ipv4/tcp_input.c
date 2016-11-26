@@ -5909,8 +5909,6 @@ discard:
 	return 0;
 }
 EXPORT_SYMBOL(tcp_rcv_state_process);
-<<<<<<< HEAD
-=======
 
 #ifdef CONFIG_MPTCP
 static inline void pr_drop_req(struct request_sock *req, __u16 port, int family)
@@ -6068,4 +6066,3 @@ drop:
 }
 EXPORT_SYMBOL(tcp_conn_request);
 #endif
->>>>>>> dd8a0e8... Linux 3.10.61 to Linux 3.10.96
