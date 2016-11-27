@@ -3,7 +3,7 @@
 #Use of script ./build_kernel.sh modelno variant ex. ./build_kernel.sh 910 G (for N910G)
 
 #Remove old output directory
-rm -r $(pwd)/output
+#rm -r $(pwd)/output
 
 #Define defconfig for the selected model
 
@@ -43,9 +43,12 @@ make -C $(pwd) O=output
 
 cp output/arch/arm/boot/Image $(pwd)/arch/arm/boot/zImage
 
-#Run script for making zip
-
-./RamScript.sh $1$2
+if [ "$3" = "N" ]; then
+    echo "Not making zip"
+    exit
+else
+./RamScript.sh $1$2 #Run script for making zip
+fi
 
 #Rerun script for zip in case of same zimage is used for both models
 
