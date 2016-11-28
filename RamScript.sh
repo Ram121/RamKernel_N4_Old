@@ -45,7 +45,7 @@ rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
 rm $(pwd)arch/arm/boot/zImage
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N$1_Linaro6.1_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_N$1_V3_R2_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
 
 #Removing of output folder moved to main build_kernel.sh script at the start
 

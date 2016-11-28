@@ -35,7 +35,7 @@ fi
 #Main build_kernel.sh script
 
 export ARCH=arm
-export CROSS_COMPILE=/opt/toolchains/gcc-linaro-6.1.1-2016.08-x86_64_arm-eabi/bin/arm-eabi-
+export CROSS_COMPILE=/opt/toolchains/UBERTC-arm-eabi-4.8/bin/arm-eabi-
 mkdir output
 
 make -C $(pwd) O=output VARIANT_DEFCONFIG=apq8084_sec_"$model"_"$variant"_defconfig apq8084_sec_defconfig SELINUX_DEFCONFIG=selinux_defconfig
