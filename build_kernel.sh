@@ -3,7 +3,7 @@
 #Use of script ./build_kernel.sh modelno variant ex. ./build_kernel.sh 910 G (for N910G)
 
 #Remove old output directory
-#rm -r $(pwd)/output
+rm -r $(pwd)/output
 
 #Define defconfig for the selected model
 
