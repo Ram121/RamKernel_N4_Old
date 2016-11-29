@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Use of script ./build_kernel.sh modelno variant ex. ./build_kernel.sh 910 G (for N910G)
+#Use of script ./build_kernel.sh modelno variant kernelversion ex. ./build_kernel.sh 910 G (for N910G)
 
 #Remove old output directory
 rm -r $(pwd)/output
@@ -47,20 +47,20 @@ if [ "$3" = "N" ]; then
     echo "Not making zip"
     exit
 else
-./RamScript.sh $1$2 #Run script for making zip
+./RamScript.sh $1$2 $4 #Run script for making zip
 fi
 
 #Rerun script for zip in case of same zimage is used for both models
 
 if [ "$2" = "G" ]; then
-	./RamScript.sh $1F
+	./RamScript.sh $1F $4
 fi
 if [[ ( "$1" = "910" ) && ( "$2" = "F" ) ]]; then
-	./RamScript.sh $1G
+	./RamScript.sh $1G $4
 fi
 if [[ ( "$1" = "915" ) && ( "$2" = "F" ) ]]; then
-	./RamScript.sh $1$2Y
+	./RamScript.sh $1$2Y $4
 fi
 if [[ ( "$1" = "915" ) && ( "$2" = "FY" ) ]]; then
-	./RamScript.sh $1F
+	./RamScript.sh $1F $4
 fi
