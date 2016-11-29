@@ -1,18 +1,22 @@
 #!/bin/bash
 
-#Use of script ./build_kernel.sh modelno variant kernelversion ex. ./build_kernel.sh 910 G (for N910G)
+#Use of script ./build_kernel.sh modelno variant kernelversion ex. ./build_kernel.sh N910 G (for N910G)
 
 #Remove old output directory
 rm -r $(pwd)/output
 
 #Define defconfig for the selected model
 
-if [ "$1" = "910" ]; then 
+if [ "$1" = "N910" ]; then 
 	model=trlte
 fi
-if [ "$1" = "915" ]; then 
+if [ "$1" = "N915" ]; then 
 	model=tblte
 fi
+if [ "$1" = "G901" ]; then 
+	model=kccat6
+fi
+
 
 #Define defconfig for the selected variant
 
