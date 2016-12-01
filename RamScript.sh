@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Script for packing ramdisk and making zip
-#Run script in format ./RamScript.sh model_number ex. ./RamScript.sh F for N910F
+#Run script in format ./RamScript.sh model variant ex. ./RamScript.sh N910 F  #for N910F
 
 for i in $(pwd)/bootimg/AIK-Linux-2.4/cleanup.sh
 do
@@ -9,7 +9,7 @@ do
 done
 wait
 
-cp bootimg/stock_bootimg/$1/boot.img $(pwd)/bootimg/AIK-Linux-2.4
+cp bootimg/stock_bootimg/$1$2/boot.img $(pwd)/bootimg/AIK-Linux-2.4
 
 for i in $(pwd)/bootimg/AIK-Linux-2.4/unpackimg.sh
 do
@@ -45,8 +45,8 @@ rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
 rm $(pwd)arch/arm/boot/zImage
 
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1_V4_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1$2_V4_All.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
 
 rm $(pwd)/bootimg/zips/template/boot.img
 
-echo "Zip made for $1"
+echo "Zip made for $1$2"
