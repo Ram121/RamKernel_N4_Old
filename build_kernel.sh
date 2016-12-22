@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Use of script ./build_kernel.sh modelno variant    #ex. $./build_kernel.sh N910 G #(for N910G)
+#Use of script ./build_kernel.sh modelno variant    #ex. $./build_kernel.sh N910 G Y #(for N910G)
 
 #Remove old output directory
 rm -r $(pwd)/output
