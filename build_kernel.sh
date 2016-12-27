@@ -4,6 +4,7 @@
 
 #Remove old output directory
 rm -r $(pwd)/output
+rm arch/arm/boot/Image
 
 #Define defconfig for the selected model
 
