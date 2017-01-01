@@ -4,7 +4,7 @@
 
 #Remove old output directory
 rm -r $(pwd)/output
-rm arch/arm/boot/Image
+rm arch/arm/boot/zImage
 
 #Define defconfig for the selected model
 
@@ -35,6 +35,9 @@ if [ "$2" = "V" ]; then
 fi
 if [ "$2" = "W8" ]; then 
 	variant=can
+fi
+if [ "$2" = "D" ]; then 
+	variant=dcm
 fi
 
 #Main build_kernel.sh script
