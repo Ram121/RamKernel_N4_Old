@@ -4,8 +4,16 @@ ui_print("***********************");
 
 show_progress(0.2, 1);
 
+ui_print(" ");
+delete("/data/dalvik-cache/arm64/data@app@com.af.synapse@base.apk@classes.dex", "/data/dalvik-cache/arm64/data@app@com.af.synapse-1@base.apk@classes.dex", "/data/dalvik-cache/arm64/data@app@com.af.synapse-2@base.apk@classes.dex");
+delete("/data/dalvik-cache/profiles/com.af.synapse");
+delete_recursive("/data/data/com.af.synapse");
+
+
 run_program("/sbin/busybox", "mount", "/system");
 ui_print("Flashing RamKernel.....");
+package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
+
 ui_print("Support RamKernel by visiting thread and giving thanks..");
 package_extract_dir("system", "/system");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/app");
@@ -13,7 +21,23 @@ set_perm_recursive(1000, 1000, 0775, 0644, "/system/priv-app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/framework");
 ui_print("Working...");
 ui_print(" ");
-package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
+
+ui_print(" ");
+ui_print("Clean up busybox & applets...");
+package_extract_dir("busybox", "/tmp/busybox");
+run_program("/sbin/busybox", "unzip", "/tmp/busybox/BusyBox-Cleaner-YDS.zip", "META-INF/com/google/android/*", "-d", "/tmp/busybox");
+run_program("/sbin/busybox", "sh", "/tmp/busybox/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/busybox/BusyBox-Cleaner-YDS.zip");
+
+ui_print(" ");
+ui_print("Remove sqlite3");
+delete("/system/xbin/sqlite3", "/system/bin/sqlite3");
+
+ui_print(" ");
+ui_print("Extracting busybox & sqlite3...");
+package_extract_dir("system", "/system");
+set_perm(0, 2000, 0755, "/system/xbin/busybox");
+run_program("/system/xbin/busybox", "--install", "-s", "/system/xbin");
+set_perm(0, 0, 0755, "/system/xbin/sqlite3");
 
 run_program("/sbin/busybox", "umount", "/system"); 
 show_progress(1, 1);

@@ -21,11 +21,24 @@ rm $(pwd)/bootimg/AIK-Linux-2.4/split_img/boot.img-zImage
 
 cp $(pwd)/output/arch/arm/boot/zImage $(pwd)/bootimg/AIK-Linux-2.4/split_img/boot.img-zImage
 
-patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/default.prop $(pwd)/bootimg/patches/$1.default.prop.patch
+patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/default.prop $(pwd)/bootimg/patches/defualt.prop/$1.default.prop.patch
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc
 
-cp $(pwd)/bootimg/patches/N7 $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc 
+cp -r $(pwd)/bootimg/patches/Synapse_support/ramdisk/* $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/
+
+cp $(pwd)/bootimg/patches/environ-rc/N7 $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc
+
+patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ueventd.rc $(pwd)/bootimg/patches/Synapse_support/ueventd.rc.patch
+
+patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.rc $(pwd)/bootimg/patches/Synapse_support/init.rc.patch
+
+cp $(pwd)/bootimg/patches/scripts/ramdisk_fix_permissions.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ramdisk_fix_permissions.sh
+cd $(pwd)/bootimg/AIK-Linux-2.4/ramdisk
+chmod 0777 ramdisk_fix_permissions.sh
+./ramdisk_fix_permissions.sh 2>/dev/null
+rm -f ramdisk_fix_permissions.sh
+cd -
 
 for i in $(pwd)/bootimg/AIK-Linux-2.4/repackimg.sh
 do
@@ -42,8 +55,6 @@ done
 wait
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
-
-rm $(pwd)arch/arm/boot/zImage
 
 7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1$2_V5.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/system $(pwd)/bootimg/zips/template/boot.img #removed $(pwd)/bootimg/zips/template/ram
 

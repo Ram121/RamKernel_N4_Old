@@ -6,6 +6,7 @@
 rm -r $(pwd)/output
 rm arch/arm/boot/zImage
 
+
 #Define defconfig for the selected model
 
 if [ "$1" = "N910" ]; then 
