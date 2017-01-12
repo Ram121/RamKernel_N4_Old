@@ -48,11 +48,11 @@ wait
 
 cp $(pwd)/bootimg/AIK-Linux-2.4/image-new.img $(pwd)/bootimg/zips/template/boot.img
 
-#for i in $(pwd)/bootimg/AIK-Linux-2.4/cleanup.sh
-#do
-#"$i" &
-#done
-#wait
+for i in $(pwd)/bootimg/AIK-Linux-2.4/cleanup.sh
+do
+"$i" &
+done
+wait
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
