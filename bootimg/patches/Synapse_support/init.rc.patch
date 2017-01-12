@@ -1,14 +1,15 @@
---- init.rc	2017-01-11 19:06:35.678439300 +0530
-+++ init.rc.edited	2017-01-11 19:02:31.000000000 +0530
-@@ -13,6 +13,7 @@
+--- init.rc	2017-01-12 20:11:10.037180300 +0530
++++ init.rc.edited	2017-01-12 20:15:32.986074100 +0530
+@@ -13,6 +13,8 @@
  import /init.carrier.rc
  import /init.container.rc
  import /init.rilcommon.rc
++import /init.d_support.sh
 +import /init.sickness.rc
  
  on early-init
      # Set init and its forked children's oom_adj.
-@@ -719,8 +720,8 @@
+@@ -719,8 +721,8 @@
      chmod 0444 /sys/devices/system/soc/soc0/soc_pvs
  
      # Assume SMP uses shared cpufreq policy for all CPUs
@@ -19,9 +20,9 @@
  
      # Auto Brightness
      chown system system  /sys/class/backlight/panel/auto_brightness
-@@ -1868,3 +1869,15 @@
- on property:service.vpnclientd.enable=0
-     stop vpnclientd
+@@ -1845,6 +1847,12 @@
+   start ccm
+   setprop persist.security.tlc.ccm 0
  
 +# Call Post-init script
 +service sick-init /sbin/sick.sh
@@ -29,9 +30,6 @@
 +    user root
 +    oneshot
 +
-+# init.d support enabler
-+service sysinit /system/bin/logwrapper /system/xbin/busybox run-parts /system/etc/init.d
-+    class late_start
-+    user root
-+    group shell
-+    oneshot
+ # tui
+   service tui /system/bin/tlc_server TUI
+   user system
