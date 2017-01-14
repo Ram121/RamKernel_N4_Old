@@ -33,7 +33,7 @@ patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ueventd.rc $(pwd)/bootimg/patches/Syn
 
 patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.rc $(pwd)/bootimg/patches/Synapse_support/init.rc.patch
 
-cp $(pwd)/bootimg/patches/scripts/ramdisk_fix_permissions.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ramdisk_fix_permissions.sh
+cp $(pwd)/bootimg/patches/Synapse_support/ramdisk_fix_permissions.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ramdisk_fix_permissions.sh
 cd $(pwd)/bootimg/AIK-Linux-2.4/ramdisk
 chmod 0777 ramdisk_fix_permissions.sh
 ./ramdisk_fix_permissions.sh 2>/dev/null
