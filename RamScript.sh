@@ -25,20 +25,21 @@ patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/default.prop $(pwd)/bootimg/patches/d
 
 rm $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc
 
-cp -r $(pwd)/bootimg/patches/Synapse_support/ramdisk/* $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/
-
 cp $(pwd)/bootimg/patches/environ-rc/N7 $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc
 
-patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ueventd.rc $(pwd)/bootimg/patches/Synapse_support/ueventd.rc.patch
+patch $(pwd)/bootimg/AIK-Linux-2.4/init.d/init.rc $(pwd)/bootimg/patches/Synapse_support/init.rc.patch
 
-patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.rc $(pwd)/bootimg/patches/Synapse_support/init.rc.patch
+cp $(pwd)/bootimg/AIK-Linux-2.4/init.d/init.d_support.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/
 
-cp $(pwd)/bootimg/patches/Synapse_support/ramdisk_fix_permissions.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ramdisk_fix_permissions.sh
-cd $(pwd)/bootimg/AIK-Linux-2.4/ramdisk
-chmod 0777 ramdisk_fix_permissions.sh
-./ramdisk_fix_permissions.sh 2>/dev/null
-rm -f ramdisk_fix_permissions.sh
-cd -
+#For synapse support
+#cp -r $(pwd)/bootimg/patches/Synapse_support/ramdisk/* $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/
+#patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ueventd.rc $(pwd)/bootimg/patches/Synapse_support/ueventd.rc.patch
+#cp $(pwd)/bootimg/patches/Synapse_support/ramdisk_fix_permissions.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/ramdisk_fix_permissions.sh
+#cd $(pwd)/bootimg/AIK-Linux-2.4/ramdisk
+#chmod 0777 ramdisk_fix_permissions.sh
+#./ramdisk_fix_permissions.sh 2>/dev/null
+#rm -f ramdisk_fix_permissions.sh
+#cd -
 
 for i in $(pwd)/bootimg/AIK-Linux-2.4/repackimg.sh
 do
