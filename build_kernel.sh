@@ -40,6 +40,10 @@ fi
 if [ "$2" = "D" ]; then 
 	variant=dcm
 fi
+if [ "$2" = "0" ]; then 
+	variant=chnzn
+fi
+
 
 #Main build_kernel.sh script
 
