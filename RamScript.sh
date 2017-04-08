@@ -35,9 +35,11 @@ cp $(pwd)/output/arch/arm/boot/zImage $(pwd)/bootimg/AIK-Linux-2.4/split_img/boo
 #Patching ramdisk
 patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/default.prop $(pwd)/bootimg/patches/defualt.prop/$1.default.prop.patch
 rm $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc
+rm $(pwd)/bootimg/AIK-Linux-2.4/split_img/boot.img-dtb
 cp $(pwd)/bootimg/patches/environ-rc/N7 $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.environ.rc
-patch $(pwd)/bootimg/AIK-Linux-2.4/init.d/init.rc $(pwd)/bootimg/patches/Synapse_support/init.rc.patch
-cp $(pwd)/bootimg/AIK-Linux-2.4/init.d/init.d_support.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/
+cp $(pwd)/bootimg/boot.img-dtb $(pwd)/bootimg/AIK-Linux-2.4/split_img/boot.img-dtb
+patch $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/init.rc $(pwd)/bootimg/patches/init.d/init.rc.patch
+cp $(pwd)/bootimg/patches/init.d/init.d_support.sh $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/
 
 #For synapse support
 #cp -r $(pwd)/bootimg/patches/Synapse_support/ramdisk/* $(pwd)/bootimg/AIK-Linux-2.4/ramdisk/

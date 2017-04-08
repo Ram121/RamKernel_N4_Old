@@ -5,6 +5,7 @@
 #Remove old output directory
 rm -r $(pwd)/output
 rm arch/arm/boot/zImage
+rm bootimg/boot.img-dtb
 
 #Define defconfig for the selected model
 if [ "$1" = "N910" ]; then 
@@ -57,11 +58,13 @@ fi
 
 #Main build_kernel.sh script
 export ARCH=arm
-export CROSS_COMPILE=/opt/toolchains/UBERTC-arm-eabi-4.8/bin/arm-eabi-
+export CROSS_COMPILE=/opt/toolchains/gcc-linaro-5.1-x86_64_arm-eabi/bin/arm-eabi-
+#/opt/toolchains/UBERTC-arm-eabi-4.8/bin
 mkdir output
 make -C $(pwd) O=output VARIANT_DEFCONFIG=apq8084_sec_"$model"_"$variant"_defconfig apq8084_sec_defconfig SELINUX_DEFCONFIG=selinux_defconfig
 make -C $(pwd) O=output
 cp output/arch/arm/boot/Image $(pwd)/arch/arm/boot/zImage
+./tools/dtbTool -o ./bootimg/boot.img-dtb -s 4096 -p ./output/scripts/dtc/ ./output/arch/arm/boot/dts/
 
 #Option for making zip or not
 if [ "$3" = "N" ]; then
