@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Use of script ./build_kernel.sh modelno variant zip.making selinux    #ex. $./build_kernel.sh N910 G Y 0 #(for N910G Permissive)
+#Use of script ./build_kernel.sh modelno variant zip.making selinux   #ex. $./build_kernel.sh N910 G Y 0 #(for N910G Permissive)
 
 #Remove old output directory
 rm -r $(pwd)/output
@@ -46,20 +46,23 @@ fi
 if [ "$4" = "0" ]; then 
 	sed -i '187s/new_value = 1;/new_value = 0;/' $(pwd)/security/selinux/selinuxfs.c
 	echo ""
-	echo "Making permissive kernel"
+	echo "Making permissive kernel for $1$2"
 	echo ""
 fi
 if [ "$4" = "1" ]; then 
 	sed -i '187s/new_value = 0;/new_value = 1;/' $(pwd)/security/selinux/selinuxfs.c
 	echo ""
-	echo "Making enforcing kernel"
+	echo "Making enforcing kernel for $1$2"
 	echo ""
 fi
 
+#Set kernel version
+sed -i '8s/CONFIG_LOCALVERSION="-RamKernel_v7"/CONFIG_LOCALVERSION="-RamKernel_b8.1"/' $(pwd)/arch/arm/configs/apq8084_sec_"$model"_"$variant"_defconfig
+
 #Main build_kernel.sh script
 export ARCH=arm
-export CROSS_COMPILE=/opt/toolchains/gcc-linaro-5.1-x86_64_arm-eabi/bin/arm-eabi-
-#/opt/toolchains/UBERTC-arm-eabi-4.8/bin
+export CROSS_COMPILE=/opt/toolchains/UBERTC-arm-eabi-4.8/bin/arm-eabi-
+#/opt/toolchains/gcc-linaro-5.1-x86_64_arm-eabi/bin
 mkdir output
 make -C $(pwd) O=output VARIANT_DEFCONFIG=apq8084_sec_"$model"_"$variant"_defconfig apq8084_sec_defconfig SELINUX_DEFCONFIG=selinux_defconfig
 make -C $(pwd) O=output
