@@ -17,6 +17,7 @@ do
 "$i" &
 done
 wait
+rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
 #Copy stock boot img to working directory
 cp bootimg/stock_bootimg/$1$2/boot.img $(pwd)/bootimg/AIK-Linux-2.4
