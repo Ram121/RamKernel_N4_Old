@@ -8,7 +8,7 @@ run_program("/sbin/busybox", "mount", "/system");
 ui_print("Flashing RamKernel.....");
 package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
 
-package_extract_dir("system", "/system");
+package_extract_dir("ram/system", "/system");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/priv-app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/framework");
