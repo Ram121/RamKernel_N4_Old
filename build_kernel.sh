@@ -57,7 +57,7 @@ if [ "$4" = "1" ]; then
 fi
 
 #Set kernel version
-sed -i '8s/CONFIG_LOCALVERSION="-RamKernel_v7"/CONFIG_LOCALVERSION="-RamKernel_b8.1"/' $(pwd)/arch/arm/configs/apq8084_sec_"$model"_"$variant"_defconfig
+sed -i '8s/CONFIG_LOCALVERSION="-RamKernel_v7"/CONFIG_LOCALVERSION="-RamKernel_v8"/' $(pwd)/arch/arm/configs/apq8084_sec_"$model"_"$variant"_defconfig
 
 #Main build_kernel.sh script
 export ARCH=arm
