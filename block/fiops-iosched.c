@@ -10,10 +10,7 @@
 #include <linux/jiffies.h>
 #include <linux/rbtree.h>
 #include <linux/ioprio.h>
-<<<<<<< HEAD
 #include <linux/blktrace_api.h>
-=======
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline
 #include "blk.h"
 
 #define VIOS_SCALE_SHIFT 10
@@ -103,14 +100,11 @@ FIOPS_IOC_FNS(on_rr);
 FIOPS_IOC_FNS(prio_changed);
 #undef FIOPS_IOC_FNS
 
-<<<<<<< HEAD
 #define fiops_log_ioc(fiopsd, ioc, fmt, args...)	\
 	blk_add_trace_msg((fiopsd)->queue, "ioc%d " fmt, (ioc)->pid, ##args)
 #define fiops_log(fiopsd, fmt, args...)	\
 	blk_add_trace_msg((fiopsd)->queue, "fiops " fmt, ##args)
 
-=======
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline
 enum wl_prio_t fiops_wl_type(short prio_class)
 {
 	if (prio_class == IOPRIO_CLASS_RT)
@@ -212,11 +206,8 @@ static void fiops_service_tree_add(struct fiops_data *fiopsd,
 		ioc->service_tree = NULL;
 	}
 
-<<<<<<< HEAD
 	fiops_log_ioc(fiopsd, ioc, "service tree add, vios %lld", vios);
 
-=======
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline
 	left = 1;
 	parent = NULL;
 	ioc->service_tree = service_tree;
@@ -410,17 +401,12 @@ static struct fiops_ioc *fiops_select_ioc(struct fiops_data *fiopsd)
 	 * to be starved, don't delay
 	 */
 	if (!rq_is_sync(rq) && fiopsd->in_flight[1] != 0 &&
-<<<<<<< HEAD
 			service_tree->count == 1) {
 		fiops_log_ioc(fiopsd, ioc,
 				"postpone async, in_flight async %d sync %d",
 				fiopsd->in_flight[0], fiopsd->in_flight[1]);
 		return NULL;
 	}
-=======
-			service_tree->count == 1)
-		return NULL;
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline
 
 	return ioc;
 }
@@ -431,11 +417,8 @@ static void fiops_charge_vios(struct fiops_data *fiopsd,
 	struct fiops_rb_root *service_tree = ioc->service_tree;
 	ioc->vios += vios;
 
-<<<<<<< HEAD
 	fiops_log_ioc(fiopsd, ioc, "charge vios %lld, new vios %lld", vios, ioc->vios);
 
-=======
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline
 	if (RB_EMPTY_ROOT(&ioc->sort_list))
 		fiops_del_ioc_rr(fiopsd, ioc);
 	else
@@ -529,12 +512,9 @@ static void fiops_completed_request(struct request_queue *q, struct request *rq)
 	fiopsd->in_flight[rq_is_sync(rq)]--;
 	ioc->in_flight--;
 
-<<<<<<< HEAD
 	fiops_log_ioc(fiopsd, ioc, "in_flight %d, busy queues %d",
 		ioc->in_flight, fiopsd->busy_queues);
 
-=======
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline
 	if (fiopsd->in_flight[0] + fiopsd->in_flight[1] == 0)
 		fiops_schedule_dispatch(fiopsd);
 }
@@ -782,7 +762,3 @@ module_exit(fiops_exit);
 MODULE_AUTHOR("Jens Axboe, Shaohua Li <shli@kernel.org>");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("IOPS based IO scheduler");
-<<<<<<< HEAD
-=======
-
->>>>>>> 09c830a... Block: Add BFQ and FIOPS Schedulers, Optimize Deadline

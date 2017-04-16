@@ -30,13 +30,8 @@
  * It helps to keep variable names smaller, simpler
  */
 
-<<<<<<< HEAD
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(50)
-=======
-#define DEF_FREQUENCY_UP_THRESHOLD		(70)
-#define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
->>>>>>> 9cbee03... Drivers: CPU Governors
 
 /*
  * The polling frequency of this governor depends on the capability of
@@ -48,22 +43,14 @@
  * this governor will not work.
  * All times here are in uS.
  */
-<<<<<<< HEAD
 #define MIN_SAMPLING_RATE_RATIO			(4)
-=======
-#define MIN_SAMPLING_RATE_RATIO			(2)
->>>>>>> 9cbee03... Drivers: CPU Governors
 
 static unsigned int min_sampling_rate;
 
 #define LATENCY_MULTIPLIER			(1000)
 #define MIN_LATENCY_MULTIPLIER			(100)
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
-<<<<<<< HEAD
 #define MAX_SAMPLING_DOWN_FACTOR		(5)
-=======
-#define MAX_SAMPLING_DOWN_FACTOR		(10)
->>>>>>> 9cbee03... Drivers: CPU Governors
 #define TRANSITION_LATENCY_LIMIT		(10 * 1000 * 1000)
 
 static void do_dbs_timer(struct work_struct *work);
@@ -108,11 +95,7 @@ static struct dbs_tuners {
 	.down_threshold = DEF_FREQUENCY_DOWN_THRESHOLD,
 	.sampling_down_factor = DEF_SAMPLING_DOWN_FACTOR,
 	.ignore_nice = 0,
-<<<<<<< HEAD
 	.freq_step = 10,
-=======
-	.freq_step = 5,
->>>>>>> 9cbee03... Drivers: CPU Governors
 };
 
 static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
@@ -276,13 +259,8 @@ static ssize_t store_ignore_nice_load(struct kobject *a, struct attribute *b,
 	for_each_online_cpu(j) {
 		struct cpu_dbs_info_s *dbs_info;
 		dbs_info = &per_cpu(cs_cpu_dbs_info, j);
-<<<<<<< HEAD
 		dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
 						&dbs_info->prev_cpu_wall, 0);
-=======
-		//dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
-						//&dbs_info->prev_cpu_wall, 0);
->>>>>>> 9cbee03... Drivers: CPU Governors
 		if (dbs_tuners_ins.ignore_nice)
 			dbs_info->prev_cpu_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
 	}
@@ -363,11 +341,7 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 
 		j_dbs_info = &per_cpu(cs_cpu_dbs_info, j);
 
-<<<<<<< HEAD
 		cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, 0);
-=======
-		//cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, 0);
->>>>>>> 9cbee03... Drivers: CPU Governors
 
 		wall_time = (unsigned int)
 			(cur_wall_time - j_dbs_info->prev_cpu_wall);
@@ -515,13 +489,8 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			j_dbs_info = &per_cpu(cs_cpu_dbs_info, j);
 			j_dbs_info->cur_policy = policy;
 
-<<<<<<< HEAD
 			j_dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
 						&j_dbs_info->prev_cpu_wall, 0);
-=======
-			//j_dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
-						//&j_dbs_info->prev_cpu_wall, 0);
->>>>>>> 9cbee03... Drivers: CPU Governors
 			if (dbs_tuners_ins.ignore_nice)
 				j_dbs_info->prev_cpu_nice =
 						kcpustat_cpu(j).cpustat[CPUTIME_NICE];

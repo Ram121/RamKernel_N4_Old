@@ -68,6 +68,6 @@ wait
 rm $(pwd)/bootimg/AIK-Linux-2.4/boot.img
 
 #Making zip
-7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1$2_b8.4_$selinux.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/ram $(pwd)/bootimg/zips/template/boot.img
+7z a -tzip -mx5 $(pwd)/bootimg/zips/RamKernel_$1$2_V8_$selinux.zip $(pwd)/bootimg/zips/template/META-INF $(pwd)/bootimg/zips/template/ram $(pwd)/bootimg/zips/template/boot.img
 rm $(pwd)/bootimg/zips/template/boot.img
 echo "$selinux zip made for $1$2"

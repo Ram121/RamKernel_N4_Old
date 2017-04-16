@@ -3,9 +3,9 @@
 #Use of script ./build_kernel.sh modelno variant zip.making selinux   #ex. $./build_kernel.sh N910 G Y 0 #(for N910G Permissive)
 
 #Remove old output directory
-rm -r $(pwd)/output
-rm arch/arm/boot/zImage
-rm bootimg/boot.img-dtb
+#rm -r $(pwd)/output
+#rm arch/arm/boot/zImage
+#rm bootimg/boot.img-dtb
 
 #Define defconfig for the selected model
 if [ "$1" = "N910" ]; then 
