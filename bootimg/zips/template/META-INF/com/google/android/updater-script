@@ -12,6 +12,9 @@ package_extract_dir("ram/system", "/system");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/priv-app");
 set_perm_recursive(1000, 1000, 0775, 0644, "/system/framework");
+package_extract_dir("ram/temp", "/temp");
+set_perm(0, 0, 0755, "/temp/runme.sh");
+run_program("/temp/runme.sh");
 ui_print(" ");
 
 run_program("/sbin/busybox", "umount", "/system"); 
