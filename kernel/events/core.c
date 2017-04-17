@@ -3672,7 +3672,7 @@ static long perf_compat_ioctl(struct file *file, unsigned int cmd,
 		}
 		break;
 	}
-	return perf_ioctl(file, cmd, arg);
+	return _perf_ioctl(file, cmd, arg);
 }
 #else
 # define perf_compat_ioctl NULL

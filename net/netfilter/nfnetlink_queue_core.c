@@ -261,11 +261,6 @@ nfqnl_zcopy(struct sk_buff *to, const struct sk_buff *from, int len, int hlen)
 	to->len += len + plen;
 	to->data_len += len + plen;
 
-	if (unlikely(skb_orphan_frags(from, GFP_ATOMIC))) {
-		skb_tx_error(from);
-		return -ENOMEM;
-	}
-
 	for (i = 0; i < skb_shinfo(from)->nr_frags; i++) {
 		if (!len)
 			break;
@@ -276,8 +271,6 @@ nfqnl_zcopy(struct sk_buff *to, const struct sk_buff *from, int len, int hlen)
 		j++;
 	}
 	skb_shinfo(to)->nr_frags = j;
-
-	return 0;
 }
 
 static int nfqnl_put_packet_info(struct sk_buff *nlskb, struct sk_buff *packet)
