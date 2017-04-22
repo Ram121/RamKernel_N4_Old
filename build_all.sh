@@ -16,6 +16,4 @@
 
 ./RamKernel.sh N915 D Y 0
 
-./RamKernel.sh G901 F Y 0
-
 echo "Permissive zip made for all models"
